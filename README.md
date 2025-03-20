@@ -91,3 +91,109 @@ Once the Bayesian Network is constructed and validated, it can be used for infer
 - **Variable Elimination**: This algorithm allows us to compute the probabilities of interest, such as the likelihood of depression given the user's input. It efficiently calculates the marginal probabilities by eliminating variables that are not of interest.
 
 This structured approach to building the Bayesian Network ensures that the system can effectively analyze the complex interplay of factors contributing to depression risk among students, providing meaningful insights and predictions based on user input.
+
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+# Student Depression Risk Assessment System
+
+## Overview
+The Student Depression Risk Assessment System evaluates the risk of depression among students based on various personal and academic factors using a Bayesian Network.
+
+## Code Breakdown
+
+### Step 1: Load Data (`load_data`)
+- The function attempts to load data from a CSV file provided by the user.
+- If loading fails, it falls back to a sample dataset embedded in the script.
+- The data consists of multiple features, including:
+  - Gender
+  - Age
+  - CGPA (Cumulative Grade Point Average)
+  - Financial Stress
+  - Depression
+
+### Step 2: Data Preprocessing (`preprocess_data`)
+- Drops unnecessary columns, such as `id`.
+- Encodes categorical data into numerical values:
+  - **Gender**: Male (0), Female (1)
+  - **Sleep Duration**: Categorical (e.g., "Less than 5 hours" → 0, "5-6 hours" → 1, etc.)
+  - **Suicidal Thoughts**: Yes (1), No (0)
+- Discretizes continuous variables for the Bayesian Network:
+  - **Age**: 3 categories (17-22, 23-28, 29-35)
+  - **CGPA**: 3 categories (Low, Medium, High)
+  - **Work Hours**: 4 categories (0-3, 4-6, 7-9, 10-12)
+- Creates combined risk indicators:
+  - **Sleep_Academic_Risk**: Indicates if there is high academic pressure and poor sleep.
+  - **Academic_Performance_Risk**: Indicates if there is low CGPA and high academic pressure.
+  - **Work_Sleep_Risk**: Indicates if there are high work hours and poor sleep.
+- Converts all columns to integer type.
+
+### Step 3: Build Bayesian Network (`build_bayesian_network`)
+- Defines the structure of the Bayesian Network by specifying relationships (edges) between variables:
+  - Academic Pressure → CGPA
+  - Sleep Duration → Depression
+  - Financial Stress → Depression
+  - Suicidal Thoughts → Depression
+- Fits the model using a Bayesian Estimator with Dirichlet priors and pseudo counts set to 10.
+  - **Dirichlet Prior**: Stabilizes probability estimates when data is limited.
+  - **Pseudo Counts**: Ensures that rarely occurring events still have a non-zero probability.
+
+### Step 4: Visualize Bayesian Network (`visualize_network`)
+- Uses `networkx` to draw the Bayesian Network graph.
+- Highlights specific nodes and edges if needed.
+
+### Step 5: Get User Input (`get_user_input`)
+- Collects personal information from the user, including:
+  - Gender
+  - Age
+  - Academic Pressure (1-5)
+  - CGPA
+  - Sleep Duration
+  - Suicidal Thoughts (Yes/No)
+  - Work Hours
+  - Financial Stress (1-5)
+  - Family History of Mental Illness
+- Converts user input into a structured format for Bayesian inference.
+
+### Step 6: Predict Depression Risk (`predict_depression_risk`)
+- Uses Variable Elimination to query the Bayesian Network for the probability of depression.
+- If the probability is close to 50%, it applies adjustments:
+  - High-risk factors push the probability up.
+  - Protective factors push the probability down.
+- Returns the final probability of depression.
+
+### Step 7: Explain Risk Factors (`explain_risk_factors`)
+- Assigns weights to different factors affecting depression risk.
+- Identifies the top factors contributing to the risk.
+- Visualizes the impact of different factors on risk.
+
+### Step 8: Provide Recommendations (`provide_recommendations`)
+- Suggests personalized actions based on identified risk factors:
+  - If suicidal thoughts are present: Urgent mental health support.
+  - If sleep is poor: Improve sleep hygiene.
+  - If academic pressure is high: Use stress management strategies.
+  - If financial stress is high: Seek financial aid options.
+  - If work hours are excessive: Reduce workload for better balance.
+
+### Step 9: Save Results (`main`)
+- Runs the entire program, which includes:
+  - Loading data
+  - Preprocessing it
+  - Building the Bayesian Network
+  - Asking for user input
+  - Predicting depression risk
+  - Providing recommendations
+  - Offering to save results to a file.
+
+## Conclusion
+This system provides a comprehensive approach to assessing and understanding depression risk among students, utilizing advanced statistical methods and user-friendly interactions.
